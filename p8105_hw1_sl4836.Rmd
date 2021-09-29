@@ -2,38 +2,94 @@
 title: "p8105_hw1_sl4836"
 author: "Hun"
 date: "9/27/2021"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-random_sample <- rnorm(10, mean = 0, sd = 1)
+```{r, message=FALSE}
+random_sample_from_std_norm_dist <- rnorm(10, mean = 0, sd = 1)
 
-logical_vector <- ifelse(random_sample>0, TRUE, FALSE)
+logical_vector <- ifelse(random_sample_from_std_norm_dist>0, TRUE, FALSE)
 
 character_vector <- rep(c("apple", "banana", "peach"),length.out = 10)
 
-factor_vector <- factor(rep(c("low", "middle", "high"), length.out = 10))
-
-levels(factor_vector)
+factor_vector <- factor(rep(c("low","middle","high"), length.out = 10))
 ```
 
-```{r}
+
+```{r, message=FALSE}
+random_sample_from_std_norm_dist
+logical_vector
+character_vector
+factor_vector
+```
+
+```{r, message=FALSE}
+library(tidyverse)
+
 data("penguins", package = "palmerpenguins")
 
-names(penguins)
-nrow(penguins)
+name_variables <- names(penguins)
 
-mean(penguins$flipper_length_mm, na.rm = T)
+nrow <- nrow(penguins)
+ncol <- ncol(penguins)
 
+levels_species <- levels(penguins$species)
+levels_sex <- levels(penguins$sex)
+levels_island <- levels(penguins$island)
+
+mean_bill_length <- penguins %>% drop_na() %>% summarise(mean(bill_length_mm)) %>% round(digits = 3)
+
+sd_bill_length <- penguins %>% drop_na() %>% summarise(sd(bill_length_mm)) %>% round(digits = 3)
+
+mean_bill_depth <- penguins %>% drop_na() %>% summarise(mean(bill_depth_mm)) %>% round(digits = 3)
+
+sd_bill_depth <- penguins %>% drop_na() %>% summarise(sd(bill_depth_mm)) %>% round(digits = 3)
+
+mean_flipper_length <- penguins %>% drop_na() %>% summarise(mean(flipper_length_mm)) %>% round(digits = 3)
+
+sd_flipper_length <- penguins %>% drop_na() %>% summarise(sd(flipper_length_mm)) %>% round(digits = 3)
+
+mean_body_mass <- penguins %>% drop_na() %>% summarise(mean(body_mass_g)) %>% round(digits = 3)
+
+sd_body_mass <- penguins %>% drop_na() %>% summarise(sd(body_mass_g)) %>% round(digits = 3)
 ```
+The size of the dataset is **`r nrow` ** x **`r ncol`.**
+
+There are **`r ncol`** variables: *`r name_variables`.*
+
+The levels of **speices** are **`r levels_species` **
+
+The levels of **island** are **`r levels_island` **
+
+The levels of **sex** are **`r levels_sex` **
+
+The **mean** of the bill_length_mm is **`r mean_bill_length`mm.**
+
+The **standard deviation** of the bill_length_mm is **`r sd_bill_length`.**
+
+The **mean** of the bill_depth_mm   is **`r mean_bill_depth`mm.**
+
+The **standard deviation** of the bill_depth_mm   is **`r sd_bill_depth`.**
+
+The **mean** of the flipper_length_mm    is **`r mean_flipper_length`mm.**
+
+The **standard deviation** of the flipper_length_mm  is **`r sd_flipper_length`.**
+
+The **mean** of the body_mass_g   is **`r mean_body_mass`g.**
+
+The **standard deviation** of the body_mass_g   is **`r sd_body_mass`.**
+
 
 ```{r}
+scatter_plot <- penguins %>% drop_na() %>% ggplot() + geom_point(aes(bill_length_mm, flipper_length_mm, color = species))
 
-
+ggsave("scatterplot_hw1.pdf", plot = scatter_plot) 
 ```
 
 
